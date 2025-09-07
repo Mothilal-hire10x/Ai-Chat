@@ -87,94 +87,192 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
-      <div className="container mx-auto max-w-4xl p-4">
-        {/* Header */}
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-center mb-4">AI Chat - Kali OS Learning Assistant</h1>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
+      {/* Animated Background Elements */}
+      <div className="absolute inset-0 bg-gradient-mesh opacity-30 animate-gradient-xy"></div>
+      <div className="absolute top-20 left-20 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-float"></div>
+      <div className="absolute top-40 right-20 w-72 h-72 bg-yellow-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-float animation-delay-2000"></div>
+      <div className="absolute -bottom-8 left-40 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-float animation-delay-4000"></div>
+      
+      <div className="relative z-10 container mx-auto max-w-6xl p-6">
+        {/* Header Section */}
+        <div className="mb-8 animate-fade-in">
+          <div className="text-center mb-8">
+            <h1 className="text-5xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-4 animate-gradient-x">
+              AI Chat Assistant
+            </h1>
+            <p className="text-xl text-gray-300 font-light">
+              Your Professional Kali OS Learning Companion
+            </p>
+          </div>
           
-          {/* System Prompt Input */}
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">
-              System Prompt (Set context for AI - e.g., "Teach me hacking commands for Kali OS")
+          {/* System Prompt Panel */}
+          <div className="glass-panel rounded-2xl p-6 mb-6 transition-all duration-300 hover:shadow-2xl hover:shadow-purple-500/20">
+            <label className="block text-lg font-semibold mb-3 text-gray-200">
+              🎯 System Prompt Configuration
             </label>
-            <textarea
-              value={systemPrompt}
-              onChange={(e) => setSystemPrompt(e.target.value)}
-              placeholder="Enter system prompt to set context for the AI..."
-              className="w-full p-3 bg-gray-800 border border-gray-700 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
-              rows="3"
-            />
+            <div className="relative">
+              <textarea
+                value={systemPrompt}
+                onChange={(e) => setSystemPrompt(e.target.value)}
+                placeholder="Define your AI assistant's expertise and behavior context..."
+                className="w-full p-4 glass-input rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-purple-400 text-white placeholder-gray-400 transition-all duration-300"
+                rows="3"
+              />
+              <div className="absolute bottom-2 right-2 text-xs text-gray-400">
+                {systemPrompt.length}/500
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Chat Messages */}
-        <div className="bg-gray-800 rounded-lg p-4 mb-4 h-96 overflow-y-auto">
-          {messages.length === 0 ? (
-            <div className="text-center text-gray-400 mt-20">
-              <p>Start a conversation! This AI is specialized for learning Kali OS and hacking commands.</p>
-              <p className="text-sm mt-2">Set a system prompt above to give context to the AI.</p>
+        {/* Chat Container */}
+        <div className="glass-panel rounded-2xl p-6 mb-6 h-[500px] flex flex-col transition-all duration-300 hover:shadow-2xl hover:shadow-blue-500/20">
+          {/* Chat Header */}
+          <div className="flex items-center justify-between mb-4 pb-4 border-b border-white/10">
+            <div className="flex items-center space-x-3">
+              <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+              <span className="text-gray-300 font-medium">Live Chat Session</span>
             </div>
-          ) : (
-            messages.map((message) => (
-              <div key={message.id} className={`mb-4 ${message.role === 'user' ? 'text-right' : 'text-left'}`}>
-                <div className={`inline-block max-w-3xl p-3 rounded-lg ${
-                  message.role === 'user' 
-                    ? 'bg-blue-600 text-white' 
-                    : 'bg-gray-700 text-gray-100'
-                }`}>
-                  <div className="whitespace-pre-wrap">{message.content}</div>
-                  {message.role === 'assistant' && (
-                    <button
-                      onClick={() => copyMessage(message.content)}
-                      className="mt-2 text-xs text-gray-400 hover:text-white"
-                    >
-                      📋 Copy
-                    </button>
-                  )}
-                </div>
-              </div>
-            ))
-          )}
-          {isLoading && (
-            <div className="text-left mb-4">
-              <div className="inline-block max-w-3xl p-3 rounded-lg bg-gray-700 text-gray-100">
-                <div className="flex items-center">
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                  AI is thinking...
-                </div>
-              </div>
-            </div>
-          )}
-          <div ref={messagesEndRef} />
-        </div>
-
-        {/* Input Area */}
-        <div className="flex gap-2">
-          <textarea
-            value={inputMessage}
-            onChange={(e) => setInputMessage(e.target.value)}
-            onKeyPress={handleKeyPress}
-            placeholder="Ask about Kali OS commands, hacking techniques, or any cybersecurity topic..."
-            className="flex-1 p-3 bg-gray-800 border border-gray-700 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
-            rows="2"
-            disabled={isLoading}
-          />
-          <div className="flex flex-col gap-2">
-            <button
-              onClick={sendMessage}
-              disabled={isLoading || !inputMessage.trim()}
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              Send
-            </button>
             <button
               onClick={resetChat}
-              className="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+              className="px-4 py-2 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-lg hover:from-red-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
             >
-              Reset
+              🔄 Reset
             </button>
           </div>
+
+          {/* Messages Area */}
+          <div className="flex-1 overflow-y-auto space-y-4 pr-2">
+            {messages.length === 0 ? (
+              <div className="flex items-center justify-center h-full">
+                <div className="text-center space-y-4 animate-fade-in">
+                  <div className="text-6xl animate-float">🤖</div>
+                  <h3 className="text-2xl font-semibold text-gray-200">Welcome to AI Chat</h3>
+                  <p className="text-gray-400 max-w-md">
+                    Start your conversation with our specialized Kali OS and cybersecurity AI assistant.
+                  </p>
+                  <div className="flex justify-center space-x-4 text-sm text-gray-500">
+                    <span>💡 Tips</span>
+                    <span>🔐 Security</span>
+                    <span>⚡ Commands</span>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {messages.map((message, index) => (
+                  <div 
+                    key={message.id} 
+                    className={`animate-slide-up ${message.role === 'user' ? 'flex justify-end' : 'flex justify-start'}`}
+                    style={{ animationDelay: `${index * 0.1}s` }}
+                  >
+                    <div className={`max-w-[80%] ${message.role === 'user' ? 'order-1' : 'order-0'}`}>
+                      {/* Message Bubble */}
+                      <div className={`p-4 rounded-2xl ${
+                        message.role === 'user' 
+                          ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-lg shadow-blue-500/25' 
+                          : 'glass-dark text-gray-100 shadow-lg'
+                      } transition-all duration-300 hover:shadow-xl transform hover:scale-[1.02]`}>
+                        <div className="whitespace-pre-wrap leading-relaxed">{message.content}</div>
+                        
+                        {/* Message Actions */}
+                        <div className="flex items-center justify-between mt-3 pt-2 border-t border-white/10">
+                          <span className="text-xs opacity-70">
+                            {new Date(message.created_at).toLocaleTimeString()}
+                          </span>
+                          {message.role === 'assistant' && (
+                            <button
+                              onClick={() => copyMessage(message.content)}
+                              className="text-xs px-3 py-1 bg-white/10 hover:bg-white/20 rounded-lg transition-all duration-200 hover:scale-105"
+                            >
+                              📋 Copy
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+            
+            {/* Loading Animation */}
+            {isLoading && (
+              <div className="flex justify-start animate-fade-in">
+                <div className="max-w-[80%]">
+                  <div className="glass-dark p-4 rounded-2xl shadow-lg">
+                    <div className="flex items-center space-x-3">
+                      <div className="flex space-x-1">
+                        <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce"></div>
+                        <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                        <div className="w-2 h-2 bg-pink-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                      </div>
+                      <span className="text-gray-300">AI is processing your request...</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+            <div ref={messagesEndRef} />
+          </div>
+        </div>
+
+        {/* Input Section */}
+        <div className="glass-panel rounded-2xl p-6 transition-all duration-300 hover:shadow-2xl hover:shadow-green-500/20">
+          <div className="flex gap-4">
+            <div className="flex-1">
+              <textarea
+                value={inputMessage}
+                onChange={(e) => setInputMessage(e.target.value)}
+                onKeyPress={handleKeyPress}
+                placeholder="Type your message about Kali OS, cybersecurity, or any technical question..."
+                className="w-full p-4 glass-input rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-purple-400 text-white placeholder-gray-400 transition-all duration-300"
+                rows="3"
+                disabled={isLoading}
+              />
+            </div>
+            <div className="flex flex-col justify-center">
+              <button
+                onClick={sendMessage}
+                disabled={isLoading || !inputMessage.trim()}
+                className="group relative px-8 py-4 bg-gradient-to-r from-green-500 to-blue-500 text-white font-semibold rounded-xl hover:from-green-600 hover:to-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-105 hover:shadow-xl hover:shadow-green-500/25"
+              >
+                <span className="relative z-10 flex items-center space-x-2">
+                  {isLoading ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      <span>Sending</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Send</span>
+                      <span>🚀</span>
+                    </>
+                  )}
+                </span>
+                <div className="absolute inset-0 bg-gradient-to-r from-green-600 to-blue-600 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              </button>
+            </div>
+          </div>
+          
+          {/* Input Footer */}
+          <div className="flex items-center justify-between mt-4 pt-4 border-t border-white/10">
+            <div className="flex items-center space-x-4 text-sm text-gray-400">
+              <span>💬 Press Enter to send</span>
+              <span>⇧ + Enter for new line</span>
+            </div>
+            <div className="text-sm text-gray-400">
+              {inputMessage.length}/1000 characters
+            </div>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="mt-8 text-center">
+          <p className="text-gray-400 text-sm">
+            Powered by <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent font-semibold">Advanced AI Technology</span>
+          </p>
         </div>
       </div>
     </div>
